@@ -14,11 +14,10 @@ screen = pygame.display.set_mode(
 
 dT = pygame.time.Clock()
 
-
-
 vertex_shader = """
 #version 460
 layout (location = 0) in vec3 position;
+//utiliza los colores que recive del array
 layout (location = 1) in vec3 vertexColor;
 
 uniform mat4 amatrix;
@@ -37,8 +36,9 @@ fragment_shader = """
 
 layout (location = 0) out vec4 fragColor;
 
+// utiliza el color que se le da al estar corriendo
 uniform vec3 color;
-
+//colores que recibio del array
 in vec3 ourColor;
 
 void main()
@@ -55,16 +55,25 @@ shader = compileProgram(
     compiled_fragment_shader
 )
 
-
 glUseProgram(shader)
 
 #posiciones para dibujar
 #primeros tres son coordenadas
 #segundos tres son colores
 vertex_data = numpy.array([
-    -0.5, -0.5, 0.0, 1.0,0.0,0.0, 
-     0.5, -0.5, 0.0, 0.0,1.0,0.0,
-     0.0,  0.5, 0.0, 0.0,0.0,1.0,
+    # -0.5,  0.5, 0.0, 1.0,0.0,0.0, 
+    # -0.5, -0.5, 0.0, 0.0,1.0,0.0,
+    #  0.5,  0.5, 0.0, 0.0,0.0,1.0,
+    #  0.5, -0.5, 0.0, 0.0,0.0,1.0,
+     0.300000, 0.300000, -0.300000, 1.0,0.0,0.0, 
+     0.300000, -0.300000, -0.300000, 1.0,0.0,0.0, 
+     0.300000, 0.300000, 0.300000, 1.0,0.0,0.0, 
+     0.300000, -0.300000, 0.300000, 1.0,0.0,0.0, 
+     -0.300000, 0.300000, -0.300000, 1.0,0.0,0.0, 
+     -0.300000, -0.300000, -0.300000, 1.0,0.0,0.0, 
+     -0.300000, 0.300000, 0.300000, 1.0,0.0,0.0, 
+     -0.300000, -0.300000, 0.300000, 1.0,0.0,0.0, 
+
 ], dtype=numpy.float32)
 
 vertex_buffer_object = glGenBuffers(1)
@@ -153,8 +162,8 @@ while running:
     )
     
     pygame.time.wait(100)
-
-    glDrawArrays(GL_TRIANGLES, 0, 3)
+    glDrawArrays(GL_TRIANGLES, 0, 32)
+    
 
     pygame.display.flip()
 
