@@ -27,34 +27,31 @@ class Mesh:
         #position
         glEnableVertexAttribArray(0)
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(0))
-        #texture
+        #textura
         glEnableVertexAttribArray(1)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(12))
 
     def loadMesh(self, filename):
-
-        #raw, unassembled data
         v = []
         vt = []
         vn = []
         
-        #final, assembled and packed result
         vertices = []
 
-        #open the obj file and read the data
+        #lectura del obj
         with open(filename,'r') as f:
             line = f.readline()
             while line:
                 firstSpace = line.find(" ")
                 flag = line[0:firstSpace]
                 if flag=="v":
-                    #vertex
+                    #vertices
                     line = line.replace("v ","")
                     line = line.split(" ")
                     l = [float(x) for x in line]
                     v.append(l)
                 elif flag=="vt":
-                    #texture coordinate
+                    #texturas
                     line = line.replace("vt ","")
                     line = line.split(" ")
                     l = [float(x) for x in line]
@@ -66,17 +63,14 @@ class Mesh:
                     l = [float(x) for x in line]
                     vn.append(l)
                 elif flag=="f":
-                    #face, three or more vertices in v/vt/vn form
+                    #caras
                     line = line.replace("f ","")
                     line = line.replace("\n","")
-                    #get the individual vertices for each line
                     line = line.split(" ")
                     self.faceVertices = []
                     faceTextures = []
                     faceNormals = []
                     for vertex in line:
-                        #break out into [v,vt,vn],
-                        #correct for 0 based indexing.
                         l = vertex.split("/")
                         position = int(l[0]) - 1
                         self.faceVertices.append(v[position])
@@ -84,8 +78,6 @@ class Mesh:
                         faceTextures.append(vt[texture])
                         normal = int(l[2]) - 1
                         faceNormals.append(vn[normal])
-                    # obj file uses triangle fan format for each face individually.
-                    # unpack each face
                     triangles_in_face = len(line) - 2
 
                     vertex_order = []
@@ -104,10 +96,6 @@ class Mesh:
                 line = f.readline()
         
         return vertices
-    
-    def destroy(self):
-        glDeleteVertexArrays(1, (self.vao,))
-        glDeleteBuffers(1,(self.vbo,))
 
 class App:
     def __init__(self,obj,pos):
@@ -270,7 +258,7 @@ class App:
                 self.pintada_random()
             
 
-            #check events
+            #revisar eventos
             for event in pg.event.get():
                 if (event.type == pg.QUIT):
                     running = False
@@ -288,7 +276,6 @@ class App:
                     if event.key == pg.K_d:
                         self.cube.eulers[1] += 5
             
-            #refresh screen
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
             glUseProgram(self.shader)
 
@@ -313,7 +300,6 @@ class App:
 
             pg.display.flip()
 
-            #timing
             pg.time.wait(100)
 
     def fracia(self):
