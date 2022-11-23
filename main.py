@@ -12,10 +12,10 @@ class Cube:
         self.position = np.array(position, dtype=np.float32)
         self.eulers = np.array(eulers, dtype=np.float32)
 
-class Mesh:
+class Obj:
     def __init__(self, filename):
         # x, y, z, s, t, nx, ny, nz
-        self.vertices = self.loadMesh(filename)
+        self.vertices = self.loadObj(filename)
         self.vertex_count = len(self.vertices)//8
         self.vertices = np.array(self.vertices, dtype=np.float32)
 
@@ -31,7 +31,7 @@ class Mesh:
         glEnableVertexAttribArray(1)
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, ctypes.c_void_p(12))
 
-    def loadMesh(self, filename):
+    def loadObj(self, filename):
         v = []
         vt = []
         vn = []
@@ -105,7 +105,7 @@ class App:
         pg.display.set_mode((640,480), pg.OPENGL|pg.DOUBLEBUF)
         #initialise opengl
         glClearColor(0.1, 0.2, 0.2, 1)
-        self.cube_mesh = Mesh(obj)
+        self.cube_mesh = Obj(obj)
 
         vertex_shader = """
         #version 460
